@@ -38,3 +38,5 @@ jar-in-jar-loader.zip
 
 data/ical/
 log/
+
+server/config.php
