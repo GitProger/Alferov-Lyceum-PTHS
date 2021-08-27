@@ -62,29 +62,6 @@ class MultiEnterDialog(title: String, vararg datas: String) : JDialog(MainFrame,
     }
 }
 
-class Menu : JMenu {
-    constructor(label: String, mnemonic: Char, items: List<JMenuItem>) : super(label) {
-        setMnemonic(mnemonic)
-        items.forEach { add(it) }
-    }
-
-    constructor(label: String, mnemonic: Char, vararg items: JMenuItem) : super(label) {
-        setMnemonic(mnemonic)
-        items.forEach { add(it) }
-    }
-}
-
-val ALT = KeyEvent.ALT_DOWN_MASK
-val CTRL = KeyEvent.CTRL_DOWN_MASK
-val SHIFT = KeyEvent.SHIFT_DOWN_MASK
-
-class MenuItem(label: String, mnemonic: Char, hotkey: KeyStroke, action: () -> Unit) : JMenuItem(label) {
-    init {
-        this.addActionListener { action() }
-        setMnemonic(mnemonic)
-        accelerator = hotkey
-    }
-}
 
 
 
