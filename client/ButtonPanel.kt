@@ -4,6 +4,7 @@ import javax.swing.JButton
 import javax.swing.JOptionPane
 import javax.swing.JPanel
 import javax.swing.JTextField
+import kotlin.system.exitProcess
 
 object UnwrappedButtonPanel : JPanel(GridLayout(10, 1)) {
     init {
@@ -13,24 +14,24 @@ object UnwrappedButtonPanel : JPanel(GridLayout(10, 1)) {
             KettleCanvas.repaint()
         }
 
-        val wantTea = JButton("I want tea!")
-        wantTea.addActionListener { _ -> requestForNearKettles() }
-        add(wantTea)
+        val dontWantTea = JButton("I don't want tea!")
+        dontWantTea.addActionListener {exitProcess(0) }
+        add(dontWantTea)
 
         val addKettle = JButton("Add new kettle")
-        addKettle.addActionListener { _ -> addNewKettle() }
+        addKettle.addActionListener {  addNewKettle() }
         add(addKettle)
 
         val removeKettle = JButton("Remove selected kettle")
-        removeKettle.addActionListener { _ -> removeSelectedKettle() }
+        removeKettle.addActionListener {  removeSelectedKettle() }
         add(removeKettle)
 
         val boilKettle = JButton("Boil selected kettle")
-        boilKettle.addActionListener { _ -> boilSelectedKettle() }
+        boilKettle.addActionListener {  boilSelectedKettle() }
         add(boilKettle)
 
         val drinkSome = JButton("Drink some water from selected kettle")
-        drinkSome.addActionListener { _ -> drinkSomeWater() }
+        drinkSome.addActionListener {  drinkSomeWater() }
         add(drinkSome)
     }
 }
@@ -109,37 +110,7 @@ fun addNewKettle() {
     if (state == -1) return
     val (room) = dialog.getResult()
 
-    val newKettle = addKettle(room)
-    allKettles.add(newKettle)
+    addKettle(room)
     KettleCanvas.repaint()
 }
 
-fun requestForNearKettles() {
-    val dialog = MultiEnterDialog(
-        "Want tea?",
-        "Where are you? (Enter your room number)", "How much do you want? (In millilitres)"
-    )
-    do {
-        val state = dialog.waitForRes()
-        if (state == -1) return
-        val (room, volume) = dialog.getResult()
-        var ok = false
-
-        try {
-            val intVolume = volume.toInt()
-
-            if (intVolume <= 0) JOptionPane.showInternalMessageDialog(
-                dialog,
-                "Volume is expected to be positive! (Do you want to donate water?)"
-            )
-            nearKettles = getNearKettles(room, intVolume)
-            ok = true
-        } catch (e: NumberFormatException) {
-            JOptionPane.showInternalMessageDialog(
-                dialog,
-                "Volume is expected to be integer (No one can measure so accurately)"
-            )
-        }
-    } while (ok)
-    KettleCanvas.repaint()
-}
