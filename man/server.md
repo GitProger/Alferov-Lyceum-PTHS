@@ -7,6 +7,6 @@
     * `Ctrl+Shift+T` on Linux
     * `Win+R` and then type `cmd` in the window on Windows
  2) type `ifconfig` in the terminal on Linux (`ipconfig` on Win)
-    in my case I got that: <img src="ifconfig.png">
+    in my case I got that: 
     ![](ifconfig.png)
     
