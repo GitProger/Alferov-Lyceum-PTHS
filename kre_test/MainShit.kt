@@ -1,3 +1,6 @@
-fun main(){
-    println("Something")
+class MainShit {
+    @JVMStatic
+    fun main() {
+        println("Something")
+    }
 }
