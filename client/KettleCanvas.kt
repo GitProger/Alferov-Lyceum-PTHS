@@ -5,6 +5,8 @@ var currentRoom: String = ""
 const val GLASS = 200
 
 object KettleCanvas : JPanel() {
+    fun getSelectedKettle(): Kettle = Kettle(0, "", 0, 0)
+
     val border = 20
     override fun paint(g: Graphics) {
         val optimums = nearKettles(currentRoom, GLASS)
