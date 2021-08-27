@@ -13,7 +13,7 @@ class HelloWorld : Runnable {
     }
 }
 
-fun main() {
+fun main(args: Array<String>) {
     SwingUtilities.invokeLater(HelloWorld())
 
     println("Hello")
