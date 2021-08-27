@@ -2,12 +2,12 @@
 #### A small intro
  * It will be a local server launched on current workstation
  * You should use Linux, but there are also similar command in Windows or mac
- * we will use apache2 and php7.0+
+ * we will use apache2, php7.0+ and MySQL
    * install on Linux: 
        ```
        sudo apt update
        sudo apt install apache2
-       sudo apt-get install php7.0 php7.0-fpm php7.0-mysql
+       sudo apt-get install php7.0 php7.0-fpm php7.0-mysql libapache2-mod-php
        ```
 ## The instructions:
  1) open terminal
@@ -18,7 +18,7 @@
     ![](ifconfig.png)
  3) Now we should note that our computer has ip-address `192.168.43.217` in local network
  4) We will run the server on port #1000, so the final url is: `http://192.168.43.217:1000/`
- 5) Set up a server (following instructions works only on Linux):
+ 5) Setting up HTTP server (following instructions works only on Linux):
     1. create a file `/etc/apache2/sites-available/hack.conf`
     2. insert following code there:
     ```
@@ -47,7 +47,12 @@
     ```
     4. Execute following commands:
     ```
+    sudo systemctl stop apache2.service
+    sudo systemctl start apache2.service
+    sudo systemctl enable apache2.service
     sudo a2ensite hack
     sudo service apache2 restart 
     ```
-    5. Finally `http://192.168.43.217:1000/` works and if you open it in a browser you will see today's date
+    5. Now we have working HTTP server `http://192.168.43.217:1000/` showing today's date if we view it in a browser
+ 6) Setting up MySQL server (Linux):
+    
