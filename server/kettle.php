@@ -29,6 +29,8 @@ class Kettle {
 
 function add($room) { // return id
     $id = request("SELECT MAX(id) FROM kettles")[0]["MAX(id)"];
+    $check = request("SELECT COUNT(1) FROM kettles WHERE room=$room")[0]["COUNT(1)"];
+    if ($check == 0) return 0; // === "0"
 
     $id = $id + 1;
     request("INSERT INTO kettles VALUES ($id, $room, 0, 0)");
