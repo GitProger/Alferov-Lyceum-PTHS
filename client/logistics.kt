@@ -1,9 +1,11 @@
 import java.io.InputStreamReader
 import java.net.URL
 import java.util.*
+import kotlin.math.absoluteValue
 
 data class Kettle(val id: Int, val room: String, var boilTime: Long, var ml: Int)
 
+private const val MILLIES_IN_DAY = 86_400_000
 private const val start = "http://192.168.43.217:1000/"
 
 private fun query(query: String): List<String> {
@@ -65,5 +67,5 @@ fun nearKettles(currentRoom: String, ml: Int): List<Pair<Kettle, Int>> {
             currentBestDistance = distance[kettle.room]!!
         }
     }
-    return optimums
+    return optimums.filter { (kettle, _) -> (kettle.boilTime - System.currentTimeMillis()).absoluteValue < MILLIES_IN_DAY }
 }
