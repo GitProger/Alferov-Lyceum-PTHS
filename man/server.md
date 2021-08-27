@@ -51,4 +51,3 @@
     sudo service apache2 restart 
     ```
     5. Finally `http://192.168.43.217:1000/` works and if you open it in a browser you will see today's date
-    
