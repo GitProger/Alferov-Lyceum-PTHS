@@ -6,4 +6,7 @@ fun removeKettle(id: Int) = Unit
 fun boilKettle(id: Int, volume: Int) = Unit
 fun drink(id: Int, volumeRemaining: Int) = Unit
 
+val roomList = listOf<String>()
+
 var room = ""
+var ml = 200

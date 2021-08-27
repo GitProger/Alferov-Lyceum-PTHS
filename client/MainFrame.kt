@@ -1,5 +1,6 @@
 import java.awt.BorderLayout
 import java.awt.FlowLayout
+import java.awt.GridLayout
 import javax.swing.JFrame
 import javax.swing.JPanel
 import javax.swing.KeyStroke
@@ -13,17 +14,13 @@ object MainFrame : JFrame("Kettle map") {
         layout = BorderLayout()
         add(KettleCanvas, BorderLayout.WEST)
 
-        val wrapper = JPanel(FlowLayout())
-        wrapper.add(UnwrappedButtonPanel)
-        add(wrapper, BorderLayout.EAST)
-
-        val menu = Menu(
-            "Menu", 'M',
-            MenuItem("I want tea", 'W', KeyStroke.getKeyStroke('W', ALT)) { requestForNearKettles() },
-            MenuItem("Add kettle", 'A', KeyStroke.getKeyStroke('A', ALT)) { addNewKettle() },
-            MenuItem("Remove selected kettle", 'R', KeyStroke.getKeyStroke('R', ALT)) { removeSelectedKettle() },
-            MenuItem("Boil kettle", 'B', KeyStroke.getKeyStroke('B', ALT)) { boilSelectedKettle() },
-            MenuItem("Drink", 'D', KeyStroke.getKeyStroke('D', ALT)) { drinkSomeWater() },
-        )
+        val input = JPanel(GridLayout(2,1))
+        val editWrapper = JPanel(FlowLayout())
+        editWrapper.add(UnwrappedEditPanel)
+        input.add(editWrapper)
+        val buttonWrapper = JPanel(FlowLayout())
+        buttonWrapper.add(UnwrappedButtonPanel)
+        input.add(buttonWrapper)
+        add(input, BorderLayout.EAST)
     }
 }
