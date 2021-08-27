@@ -4,7 +4,7 @@
  * You should use Linux, but there are also similar command in Windows or mac
  * we will use apache2, php7.0+ and MySQL
    * install on Linux: 
-       ```bash
+       ```shell script
        sudo apt update
        sudo apt install apache2
        sudo apt install php7.0 php7.0-fpm php7.0-mysql libapache2-mod-php
