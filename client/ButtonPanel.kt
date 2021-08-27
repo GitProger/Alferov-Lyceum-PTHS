@@ -41,28 +41,24 @@ fun drinkSomeWater() {
         "TEA!!!",
         "How much water remains? (In millilitres)"
     )
-    do {
-        val state = dialog.waitForRes()
-        if (state == -1) return
-        val (volume) = dialog.getResult()
-        var ok = false
-
+    dialog.processData {
         try {
-            val intVolume = volume.toInt()
+            val intVolume = it[0].toInt()
 
             if (intVolume <= 0) JOptionPane.showInternalMessageDialog(
                 dialog,
                 "Volume is expected to be positive! (Did you drink more than was?)"
             )
             drink(KettleCanvas.getSelectedKettle().id, intVolume)
-            ok = true
+            true
         } catch (e: NumberFormatException) {
             JOptionPane.showInternalMessageDialog(
                 dialog,
                 "Volume is expected to be integer (No one can measure so accurately)"
             )
+            false
         }
-    } while (ok)
+    }
     KettleCanvas.repaint()
 }
 
@@ -96,6 +92,7 @@ fun boilSelectedKettle() {
                 dialog,
                 "Volume is expected to be integer (No one can measure so accurately)"
             )
+            dialog.reject()
         }
     } while (ok)
     KettleCanvas.repaint()
