@@ -16,7 +16,5 @@ object KettleCanvas : JPanel() {
         val minDistance = optimums.minOf { (_, dist) -> dist }
         val maxDistance = optimums.maxOf { (_, dist) -> dist }
 
-        g.drawLine(x1, y1, x2, y2)
-        g.anyOtherMethod()
     }
 }
