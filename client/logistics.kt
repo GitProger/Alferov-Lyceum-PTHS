@@ -67,15 +67,3 @@ fun nearKettles(currentRoom: String, ml: Int): List<Kettle> {
     }
     return optimums
 }
-
-fun main() {
-    while(true) {
-        val query = readLine()!!.split(' ')
-        when (query[0]) {
-            "add" -> add(query[1])
-            "remove" -> remove(query[1])
-            "update" -> update(query[1].toInt(), query[2].toLong(), query[3].toInt())
-            "tea" -> println(nearKettles(query[1], query[2].toInt()).joinToString("\n"))
-        }
-    }
-}
