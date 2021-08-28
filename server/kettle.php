@@ -27,10 +27,15 @@ class Kettle {
     }
 }
 
+function to_string($row) {
+    return "${row['id']} ${row['room']} ${row['time']} ${row['volume']}";
+}
+
 function add($room) { // return id
     $id = request("SELECT MAX(id) FROM kettles")[0]["MAX(id)"];
-    $check = request("SELECT COUNT(1) FROM kettles WHERE room=$room")[0]["COUNT(1)"];
-    if ($check == 0) return 0; // === "0"
+
+//    $check = request("SELECT COUNT(1) FROM kettles WHERE room=$room")[0]["COUNT(1)"];
+//    if ($check == 0) return 0; // === "0"
 
     $id = $id + 1;
     request("INSERT INTO kettles VALUES ($id, $room, 0, 0)");
@@ -49,12 +54,16 @@ function ask() {
     return join(
         "\n", 
         array_map(
-            function ($str) {
-                return "${str['id']} ${str['room']} ${str['time']} ${str['volume']}";
+            function ($row) {
+                return to_string($row);
             },
             request("SELECT * FROM kettles")
         )
     );
+}
+
+function by_id($id) {
+    return to_string(request("SELECT * FROM kettles WHERE id=$id")[0]);
 }
 
 function map() {

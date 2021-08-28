@@ -77,4 +77,4 @@ fun nearKettles(currentRoom: String, ml: Int, currentTime: Long): List<Pair<Kett
 }
 
 fun boilKettle(id: Int, volume: Int) = update(id, System.currentTimeMillis() + 90000L, volume)
-//fun drink(id: Int, volumeRemaining: Int) = update(id, )
+fun drink(id: Int, volumeRemaining: Int) = update(id, byId(id).boilTime, volumeRemaining)

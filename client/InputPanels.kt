@@ -43,10 +43,11 @@ object UnwrappedEditPanel : JPanel(GridLayout(2, 1)) {
 object UnwrappedButtonPanel : JPanel(GridLayout(5, 1)) {
     init {
         addButton("I don't want tea!") { exitProcess(0) }
-        addButton("Add new kettle") { addKettle(room) }
+        addButton("Add new kettle") { add(room) }
         addButton("Remove selected kettle", ::removeSelectedKettle)
         addButton("Boil selected kettle", ::boilSelectedKettle)
         addButton("Drink some water from selected kettle", ::drinkSomeWater)
+        addButton("Manage other kettle...", ::drinkSomeWater)
     }
 }
 
@@ -70,7 +71,7 @@ fun drinkSomeWater() {
 }
 
 fun removeSelectedKettle() {
-    removeKettle(KettleCanvas.getSelectedKettle().id)
+    delete(KettleCanvas.getSelectedKettle().id)
     KettleCanvas.repaint()
 }
 

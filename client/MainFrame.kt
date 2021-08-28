@@ -14,7 +14,7 @@ object MainFrame : JFrame("Kettle map") {
         layout = BorderLayout()
         add(KettleCanvas, BorderLayout.WEST)
 
-        val input = JPanel(GridLayout(2,1))
+        val input = JPanel(GridLayout(2, 1))
         val editWrapper = JPanel(FlowLayout())
         editWrapper.add(UnwrappedEditPanel)
         input.add(editWrapper)
@@ -22,5 +22,8 @@ object MainFrame : JFrame("Kettle map") {
         buttonWrapper.add(UnwrappedButtonPanel)
         input.add(buttonWrapper)
         add(input, BorderLayout.EAST)
+        pack()
+        setSize(800, 800)
+        isVisible = true
     }
 }
