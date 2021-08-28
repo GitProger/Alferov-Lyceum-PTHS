@@ -3,7 +3,9 @@ import java.awt.event.KeyEvent
 import java.lang.NumberFormatException
 import javax.swing.*
 
-class MultiEnterDialog(title: String, vararg datas: String) : JDialog(MainFrame, title, false) {
+class MultiEnterDialog(title: String, datas: List<String>) : JDialog(MainFrame, title, false) {
+    constructor(title: String, vararg datas: String) : this(title, datas.toList())
+
     val fields = List(datas.size) { JTextField() }
     var state = 0 // 0 means waiting, 1 means OK pressing, -1 means Cancel pressing
     val messageLabel = JLabel("")
