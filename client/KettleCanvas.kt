@@ -7,7 +7,6 @@ import java.awt.geom.Rectangle2D
 import javax.swing.JPanel
 import kotlin.math.abs
 
-var currentRoom: String = ""
 const val GLASS = 200
 
 fun extended(r: IntRange) = r.first - 1..r.last + 1
@@ -51,8 +50,9 @@ object KettleCanvas : JPanel() {
     }
     private const val border = 20
     override fun paint(g: Graphics) {
+        setSize(1400,900)
         val currentTime = System.currentTimeMillis()
-        val optimums = nearKettles(currentRoom, ml, currentTime)
+        val optimums = nearKettles(room, ml, currentTime)
         if (optimums.isEmpty()) return
         val distanceRange = extended(optimums.rangeOf { (_, dist) -> dist })
         val boilRange = extended(optimums.rangeOf { (kettle, _) -> (currentTime - kettle.boilTime).toInt() / 1000 })
@@ -87,7 +87,7 @@ object KettleCanvas : JPanel() {
     private fun romanFont(size: Int) = Font("Times New Roman", Font.PLAIN, size)
 
     private fun drawScale(g: Graphics, xRange: IntRange, yRange: IntRange): Pair<List<Int>, List<Int>> {
-        g.color = Color.ORANGE
+        g.color = Color.BLACK
         val freq = 2
         val xLabels = xRange.split(parts = (width - freq * border) / freq * border)
         val yLabels = yRange.split(parts = (height - freq * border) / freq * border)
