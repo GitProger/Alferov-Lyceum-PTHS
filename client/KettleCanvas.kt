@@ -31,10 +31,12 @@ object KettleCanvas : JPanel() {
 //        override fun mouseExited(e: MouseEvent) {}
 //        override fun mouseEntered(e: MouseEvent) {}
 //    }
+
     fun getSelectedKettle() = Kettle(0, "", 0, 0)
 
     private const val border = 20
     override fun paint(g: Graphics) {
+        if (width == 0 || height == 0) return
         val currentTime = System.currentTimeMillis()
         val optimums = listOf(
             Kettle(1, "room1", currentTime - 30000, 1000) to 50,
