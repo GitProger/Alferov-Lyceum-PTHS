@@ -5,6 +5,9 @@ import kotlin.math.absoluteValue
 
 data class Kettle(val id: Int, val room: String, var boilTime: Long, var ml: Int)
 
+var room = ""
+var ml = 200
+
 private const val MILLIES_IN_DAY = 86_400_000
 private const val start = "http://192.168.43.217:1000/"
 
@@ -16,7 +19,8 @@ private fun query(query: String): List<String> {
 private fun ask() = query("ask.php").map { it.toKettle() }
 private fun update(id: Int, boilTime: Long, ml: Int) = query("boil.php?id=$id&boil_time=$boilTime&ml=$ml")
 fun add(room: String) = query("add.php?room=$room").first().toInt()
-fun remove(id: Int) = query("remove.php?id=$id")
+fun delete(id: Int) = query("remove.php?id=$id")
+fun byId(id: Int) = query("bi_id.php?id=$id").first().toKettle()
 
 var graph: TreeMap<String, TreeMap<String, Int>>? = null
 private fun getMap() {
