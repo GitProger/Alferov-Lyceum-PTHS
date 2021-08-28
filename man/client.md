@@ -5,3 +5,9 @@ You should just build the application with any compiler, keeping its structure.
 >   ```xml
 >   <sourceFolder url="file://$MODULE_DIR$/client" isTestSource="false" />
 >   ```
+
+- replace `client/ip.txt`'s content with address of the HTTP server
+   `client/ip.txt`:
+   ```
+   http://192.168.43.217:1000/
+   ```
