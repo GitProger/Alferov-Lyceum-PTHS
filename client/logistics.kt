@@ -5,6 +5,9 @@ import kotlin.math.absoluteValue
 
 data class Kettle(val id: Int, val room: String, var boilTime: Long, var ml: Int)
 
+var room = ""
+var ml = 200
+
 private const val MILLIES_IN_DAY = 86_400_000
 private const val start = "http://192.168.43.217:1000/"
 
@@ -15,8 +18,10 @@ private fun query(query: String): List<String> {
 
 private fun ask() = query("ask.php").map { it.toKettle() }
 private fun update(id: Int, boilTime: Long, ml: Int) = query("boil.php?id=$id&boil_time=$boilTime&ml=$ml")
-private fun add(room: String) = query("add.php?room=$room").first().toInt()
-private fun remove(id: String) = query("remove.php?id=$id")
+fun add(room: String) = query("add.php?room=$room").first().toInt()
+fun delete(id: Int) = query("remove.php?id=$id")
+fun byId(id: Int) = query("bi_id.php?id=$id").first().toKettle()
+
 var graph: TreeMap<String, TreeMap<String, Int>>? = null
 private fun getMap() {
     if (graph == null) {
@@ -39,7 +44,7 @@ fun String.toKettle(): Kettle {
 
 fun updateAllKettles() = ask()
 
-fun nearKettles(currentRoom: String, ml: Int): List<Pair<Kettle, Int>> {
+fun nearKettles(currentRoom: String, ml: Int, currentTime: Long): List<Pair<Kettle, Int>> {
     getMap()
     val distance = TreeMap<String, Int>() //distance from currentRoom, calculated using Dijkstra algorithm
     distance[currentRoom] = 0
@@ -58,7 +63,8 @@ fun nearKettles(currentRoom: String, ml: Int): List<Pair<Kettle, Int>> {
             }
         }
     }
-    val candidates = ask().filter { it.ml >= ml }.sortedByDescending { it.boilTime }
+    val candidates = ask().filter { it.ml >= ml }
+        .sortedWith(compareByDescending<Kettle> { it.boilTime.coerceAtMost(currentTime) }.thenBy { distance[it.room]!! })
     var currentBestDistance = Int.MAX_VALUE
     val optimums = mutableListOf<Pair<Kettle, Int>>()
     for (kettle in candidates) {
@@ -69,3 +75,6 @@ fun nearKettles(currentRoom: String, ml: Int): List<Pair<Kettle, Int>> {
     }
     return optimums.filter { (kettle, _) -> (kettle.boilTime - System.currentTimeMillis()).absoluteValue < MILLIES_IN_DAY }
 }
+
+fun boilKettle(id: Int, volume: Int) = update(id, System.currentTimeMillis() + 90000L, volume)
+//fun drink(id: Int, volumeRemaining: Int) = update(id, )

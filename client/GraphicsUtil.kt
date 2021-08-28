@@ -62,6 +62,11 @@ class MultiEnterDialog(title: String, vararg datas: String) : JDialog(MainFrame,
     }
 }
 
+fun Container.addButton(label: String, action: () -> Unit) {
+    val button = JButton(label)
+    button.addActionListener { action() }
+    add(button)
+}
 
 
 

@@ -41,12 +41,6 @@ object UnwrappedEditPanel : JPanel(GridLayout(2, 1)) {
 }
 
 object UnwrappedButtonPanel : JPanel(GridLayout(5, 1)) {
-    fun addButton(label: String, action: () -> Unit) {
-        val button = JButton(label)
-        button.addActionListener { action() }
-        add(button)
-    }
-
     init {
         addButton("I don't want tea!") { exitProcess(0) }
         addButton("Add new kettle") { addKettle(room) }

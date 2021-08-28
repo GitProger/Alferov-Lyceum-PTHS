@@ -1,6 +1,4 @@
-import java.awt.Font
-import java.awt.Graphics
-import java.awt.Graphics2D
+import java.awt.*
 import java.awt.font.FontRenderContext
 import java.awt.font.TextLayout
 import java.awt.geom.Rectangle2D
@@ -9,35 +7,83 @@ import javax.swing.JPanel
 var currentRoom: String = ""
 const val GLASS = 200
 
+private fun <V> Iterable<V>.rangeOf(selector: (V) -> Int) = minOf(selector)..maxOf(selector)
+
+private fun IntRange.split(parts: Int): List<Int> {
+    val length = endInclusive - start
+    return (this step (length + parts - 1) / parts).toList()
+}
+
 object KettleCanvas : JPanel() {
     fun getSelectedKettle(): Kettle = Kettle(0, "", 0, 0)
 
     private const val border = 20
     override fun paint(g: Graphics) {
-        val optimums = nearKettles(currentRoom, GLASS)
-        if (optimums.isEmpty()) return
         val currentTime = System.currentTimeMillis()
-        val minBoilTime = optimums.minOf { (kettle, _) -> (kettle.boilTime - currentTime).toInt() / 1000 }
-        val maxBoilTime = optimums.maxOf { (kettle, _) -> (kettle.boilTime - currentTime).toInt() / 1000 }
-        val minDistance = optimums.minOf { (_, dist) -> dist }
-        val maxDistance = optimums.maxOf { (_, dist) -> dist }
+        val optimums = nearKettles(currentRoom, GLASS, currentTime)
+        if (optimums.isEmpty()) return
+        val distanceRange = optimums.rangeOf { (_, dist) -> dist }
+        val boilRange = optimums.rangeOf { (kettle, _) -> (kettle.boilTime - currentTime).toInt() / 1000 }
 
         drawAxes(g)
-        drawScale(g, minDistance, maxDistance, minBoilTime, maxBoilTime)
+        val (xRange, yRange) = drawScale(g, distanceRange, boilRange)
+        drawPoints(g, optimums, currentTime, distanceRange, boilRange)
+    }
+
+    private fun drawPoints(
+        g: Graphics, optimums: List<Pair<Kettle, Int>>,
+        currentTime: Long, xRange: IntRange, yRange: IntRange
+    ): List<Pair<Kettle, Point>> {
+        g.color = Color.BLUE
+        val res = mutableListOf<Pair<Kettle, Point>>()
+        for ((kettle, dist) in optimums) {
+            val x = getCoordinate(xRange, dist, width)
+            val boilTime = (kettle.boilTime - currentTime).toInt() / 1000
+            val y = getCoordinate(yRange, yRange.first + yRange.last - boilTime, height)
+            g.drawOval(x - 2, y - 2, 4, 4)
+            res.add(kettle to Point(x, y))
+        }
+        return res
     }
 
     private fun romanFont(size: Int) = Font("Times New Roman", Font.PLAIN, size)
 
-    private fun drawScale(g: Graphics, minX: Int, maxX: Int, minY: Int, maxY: Int) {
-        val longestText = listOf(minX, maxX, minY, maxY).map { it.toString() }.maxByOrNull { it.length }!!
+    private fun drawScale(g: Graphics, xRange: IntRange, yRange: IntRange): Pair<List<Int>, List<Int>> {
+        g.color = Color.ORANGE
+        val freq = 2
+        val xLabels = xRange.split(parts = (width - freq * border) / freq * border)
+        val yLabels = yRange.split(parts = (height - freq * border) / freq * border)
+        val longestText = (xLabels + yLabels).map { it.toString() }.maxByOrNull { it.length }!!
         g.font = optimalFont(g, longestText)
-        for (x in border until width - border step 2 * border) {
-            val label = (minX + (maxX - minX).toDouble() * (x - border) / (width - 2 * border)).toInt().toString()
-            g.drawString(label, x, height - border)
+        for ((index, label) in xLabels.map { it.toString() }.withIndex()) {
+            val x = getCoordinate(xLabels, freq, index, width)
+            drawTextCentered(g, label, x, height - border / 2)
+        }
+        for ((index, label) in yLabels.map { it.toString() }.withIndex()) {
+            val y = getCoordinate(yLabels, freq, yLabels.lastIndex - index, height)
+            drawTextCentered(g, label, border / 2, y)
+        }
+        return xLabels to yLabels
+    }
+
+    private fun getCoordinate(range: IntRange, value: Int, length: Int): Int {
+        return if (range.first == range.last) {
+            (length - border) / 2
+        } else {
+            border + (value - range.first) * (length - 2 * border) / (range.last - range.first)
+        }
+    }
+
+    private fun getCoordinate(coordinates: List<Int>, freq: Int, index: Int, length: Int): Int {
+        return if (coordinates.size == 1) {
+            (length - border) / 2
+        } else {
+            (length - freq * border) / (coordinates.size - 1) * index
         }
     }
 
     private fun drawAxes(g: Graphics) {
+        g.color = Color.BLACK
         g.drawLine(border, border, border, height - border)
         g.drawLine(border * 1 / 2, border * 3 / 2, border, border)
         g.drawLine(border * 3 / 2, border * 3 / 2, border, border)
@@ -46,8 +92,7 @@ object KettleCanvas : JPanel() {
         g.drawLine(width - border * 3 / 2, height - border * 1 / 2, width - border, height - border)
     }
 
-
-    private fun drawTextCentered(g: Graphics, x: Int, y: Int, text: String) {
+    private fun drawTextCentered(g: Graphics, text: String, x: Int, y: Int) {
         val bounds: Rectangle2D = TextLayout(text, g.font, (g as Graphics2D).fontRenderContext).bounds
         g.drawString(text, x - (bounds.width / 2).toInt(), y + (bounds.height / 2).toInt())
     }
