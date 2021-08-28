@@ -15,8 +15,9 @@ private fun query(query: String): List<String> {
 
 private fun ask() = query("ask.php").map { it.toKettle() }
 private fun update(id: Int, boilTime: Long, ml: Int) = query("boil.php?id=$id&boil_time=$boilTime&ml=$ml")
-private fun add(room: String) = query("add.php?room=$room").first().toInt()
-private fun remove(id: String) = query("remove.php?id=$id")
+fun add(room: String) = query("add.php?room=$room").first().toInt()
+fun remove(id: Int) = query("remove.php?id=$id")
+
 var graph: TreeMap<String, TreeMap<String, Int>>? = null
 private fun getMap() {
     if (graph == null) {
@@ -70,3 +71,6 @@ fun nearKettles(currentRoom: String, ml: Int, currentTime: Long): List<Pair<Kett
     }
     return optimums.filter { (kettle, _) -> (kettle.boilTime - System.currentTimeMillis()).absoluteValue < MILLIES_IN_DAY }
 }
+
+fun boilKettle(id: Int, volume: Int) = update(id, System.currentTimeMillis() + 90000L, volume)
+//fun drink(id: Int, volumeRemaining: Int) = update(id, )
