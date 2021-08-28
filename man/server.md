@@ -81,5 +81,14 @@
     
     EXIT;
     ```
-    5. So, we have configured a MySQL server.
+    5. edit `server/config.php`
+    ```php
+    $conf = [
+        "server" => "127.0.0.1",
+        "user" => "<your current user|root>",
+        "password" => "<user password|root password>",
+        "dbname" => "kettle"
+    ];
+    ```
+    6. So, we have configured a MySQL server.
   7) Finally, `http://192.168.43.217:1000/` is completely ready for work.
