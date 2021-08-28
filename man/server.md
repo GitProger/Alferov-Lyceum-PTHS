@@ -16,7 +16,7 @@
  2) type `ifconfig` in the terminal on Linux (`ipconfig` on Win)
     in my case I got that: 
     ![](ifconfig.png)
- 3) Now we should note that our computer has ip-address `192.168.43.217` in local network
+ 3) Now, note that our computer has an ip-address of `192.168.43.217` in local network
  4) We will run the server on port #1000, so the final url is: `http://192.168.43.217:1000/`
  5) Setting up HTTP server (following instructions works only on Linux):
     1. create a file `/etc/apache2/sites-available/hack.conf`
