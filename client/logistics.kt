@@ -10,7 +10,7 @@ var room = "1"
 var ml = 200
 
 private const val MILLIES_IN_DAY = 86_400_000
-private val start = File("ip.txt").readLines()[0]
+private val start = "http://192.168.43.217:1000/" //File("ip.txt").readLines()[0]
 
 private fun query(query: String): List<String> {
     val url = URL(start + query)
