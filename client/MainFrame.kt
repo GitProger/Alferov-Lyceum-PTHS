@@ -19,6 +19,11 @@ object MainFrame : JFrame("Kettle map") {
     fun stub() = Unit
 
     init {
+/*        setBounds(0, 0, 1000, 800)
+        add(KettleCanvas)
+        KettleCanvas.setBounds(0, 0, 1000, 1000)
+        isVisible = true
+        defaultCloseOperation = EXIT_ON_CLOSE*/
         defaultCloseOperation = EXIT_ON_CLOSE
         layout = BorderLayout()
         add(KettleCanvas, BorderLayout.WEST)
@@ -27,13 +32,13 @@ object MainFrame : JFrame("Kettle map") {
         input.add(wrapped(UnwrappedEditPanel))
         input.add(wrapped(UnwrappedButtonPanel))
         add(input, BorderLayout.EAST)
-        pack()
-        setSize(800, 800)
 
         val (iw, ih) = input.size
-        KettleCanvas.setBounds(0, 0, 600, 800)
+        pack()
+        setSize(1600,900)
 
         isVisible = true
+        extendedState = extendedState or MAXIMIZED_BOTH
     }
 }
 

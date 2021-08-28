@@ -5,7 +5,7 @@ import kotlin.math.absoluteValue
 
 data class Kettle(val id: Int, val room: String, var boilTime: Long, var ml: Int)
 
-var room = ""
+var room = "1"
 var ml = 200
 
 private const val MILLIES_IN_DAY = 86_400_000
@@ -80,6 +80,7 @@ fun nearKettles(currentRoom: String, ml: Int, currentTime: Long): List<Pair<Kett
 }
 
 fun boilKettle(id: Int, volume: Int) {
-    update(id, System.currentTimeMillis() + 90000L, volume)
+    val boilingTime = (180L * 1000L * volume) / 1000L
+    update(id, System.currentTimeMillis() + boilingTime, volume)
 }
 fun drink(id: Int, volumeRemaining: Int) = update(id, byId(id).boilTime, volumeRemaining)
