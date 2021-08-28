@@ -1,10 +1,7 @@
 import java.awt.*
-import java.awt.event.MouseEvent
-import java.awt.event.MouseListener
 import java.awt.font.FontRenderContext
 import java.awt.font.TextLayout
 import java.awt.geom.Rectangle2D
-import javax.swing.JFrame
 import javax.swing.JPanel
 
 var currentRoom: String = ""
@@ -16,7 +13,9 @@ private fun <V> Iterable<V>.rangeOf(selector: (V) -> Int) = minOf(selector)..max
 
 private fun IntRange.split(parts: Int): List<Int> {
     val length = endInclusive - start
-    return (this step (length + parts - 1) / parts).toList()
+    val step = (length + parts - 1) / parts
+    if (step <= 0) return listOf()
+    return (this step step).toList()
 }
 
 object KettleCanvas : JPanel() {
@@ -36,13 +35,8 @@ object KettleCanvas : JPanel() {
 
     private const val border = 20
     override fun paint(g: Graphics) {
-        if (width == 0 || height == 0) return
         val currentTime = System.currentTimeMillis()
-        val optimums = listOf(
-            Kettle(1, "room1", currentTime - 30000, 1000) to 50,
-            Kettle(1, "room2", currentTime - 20000, 1000) to 60,
-            Kettle(1, "room2", currentTime - 15000, 1000) to 70
-        )
+        val optimums = nearKettles(currentRoom, ml, currentTime)
         if (optimums.isEmpty()) return
         val distanceRange = extended(optimums.rangeOf { (_, dist) -> dist })
         val boilRange = extended(optimums.rangeOf { (kettle, _) -> (currentTime - kettle.boilTime).toInt() / 1000 })
