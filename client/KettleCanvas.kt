@@ -22,18 +22,32 @@ private fun IntRange.split(parts: Int): List<Int> {
 }
 
 object KettleCanvas : JPanel() {
-    var kettleList: List<Pair<Kettle, Point>> = listOf()
+    private var kettleList: List<Pair<Kettle, Point>> = listOf()
+    private var optimums: List<Pair<Kettle, Int>> = listOf()
     private var selectedKettle: Kettle? = null
+    private var pt: Point? = null
     fun getSelectedKettle() = selectedKettle
     private val mouseListener: MouseListener = object : MouseListener {
         override fun mouseClicked(e: MouseEvent) = e.run {
-            selectedKettle = kettleList.minByOrNull { (_, p) -> abs(e.x - p.x) + abs(e.y - p.y) }?.first
+            selectedKettle = kettleList.minByOrNull { (k, p) -> abs(e.x - p.x) + abs(e.y - p.y) }?.first
+            val g = graphics
+
+            if (pt != null) {
+                g.color = Color.BLUE
+                g.fillOval(pt!!.x - 2, pt!!.y - 2, 4, 4)
+            }
+            pt = kettleList.minByOrNull { (k, p) -> abs(e.x - p.x) + abs(e.y - p.y) }?.second ?: return
+            g.color = Color.RED
+            g.fillOval(pt!!.x - 2, pt!!.y - 2, 4, 4)
         }
 
         override fun mouseReleased(e: MouseEvent) {}
         override fun mousePressed(e: MouseEvent) {}
         override fun mouseExited(e: MouseEvent) {}
         override fun mouseEntered(e: MouseEvent) {}
+    }
+    init{
+        addMouseListener(mouseListener)
     }
     private const val border = 20
     override fun paint(g: Graphics) {
