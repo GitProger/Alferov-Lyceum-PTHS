@@ -4,7 +4,7 @@ import java.lang.NumberFormatException
 import javax.swing.*
 import kotlin.system.exitProcess
 
-class EditPanel(question: String, default: String, actionOnEditing: (String) -> String) : JPanel(GridLayout(2,1)) {
+class EditPanel(question: String, default: String, actionOnEditing: (String) -> String) : JPanel(GridLayout(1,2)) {
     init {
         add(JLabel(question), BorderLayout.WEST)
 
@@ -52,6 +52,7 @@ object UnwrappedButtonPanel : JPanel(GridLayout(5, 1)) {
 }
 
 fun drinkSomeWater() {
+    val selected = KettleCanvas.getSelectedKettle() ?: return
     val water = JOptionPane.showInputDialog(
         MainFrame,
         "How much water remains? (In millilitres)",
@@ -67,7 +68,7 @@ fun drinkSomeWater() {
                 "Volume is expected to be positive! (Did you drink more than was?)"
             )
         } else {
-            drink(KettleCanvas.getSelectedKettle().id, intVolume)
+            drink(selected.id, intVolume)
         }
     } catch (e: NumberFormatException) {
         JOptionPane.showInternalMessageDialog(
@@ -79,11 +80,15 @@ fun drinkSomeWater() {
 }
 
 fun removeSelectedKettle() {
-    delete(KettleCanvas.getSelectedKettle().id)
+    val selected = KettleCanvas.getSelectedKettle() ?: return
+
+    delete(selected.id)
     KettleCanvas.repaint()
 }
 
 fun boilSelectedKettle() {
+    val selected = KettleCanvas.getSelectedKettle() ?: return
+
     val water = JOptionPane.showInputDialog(
         MainFrame,
         "How much did you pour? (In millilitres)",
@@ -99,7 +104,7 @@ fun boilSelectedKettle() {
                 "Volume is expected to be positive! (Did you drink more than was?)"
             )
         } else {
-            boilKettle(KettleCanvas.getSelectedKettle().id, intVolume)
+            boilKettle(selected.id, intVolume)
         }
     } catch (e: NumberFormatException) {
         JOptionPane.showInternalMessageDialog(

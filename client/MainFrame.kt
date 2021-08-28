@@ -5,8 +5,14 @@ import java.awt.GridLayout
 import javax.swing.JFrame
 import javax.swing.JPanel
 
-fun main() = MainFrame.stub()
+fun main() {
+    MainFrame.stub()
+    KettleCanvas.repaint()
+}
 
+/*{
+    update(2, System.currentTimeMillis(), 1000)//
+}*/
 fun wrapped(panel: JPanel) = JPanel(BorderLayout()).apply { add(panel, BorderLayout.CENTER) }
 
 object MainFrame : JFrame("Kettle map") {
@@ -25,7 +31,7 @@ object MainFrame : JFrame("Kettle map") {
         setSize(800, 800)
 
         val (iw, ih) = input.size
-        KettleCanvas.setSize(this.width - iw, ih)
+        KettleCanvas.setBounds(0, 0, 600, 800)
 
         isVisible = true
     }
