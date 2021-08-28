@@ -2,6 +2,7 @@ import java.io.InputStreamReader
 import java.net.URL
 import java.util.*
 import kotlin.math.absoluteValue
+import java.io.File
 
 data class Kettle(val id: Int, val room: String, var boilTime: Long, var ml: Int)
 
@@ -9,7 +10,7 @@ var room = "1"
 var ml = 200
 
 private const val MILLIES_IN_DAY = 86_400_000
-private const val start = "http://192.168.43.217:1000/"
+private val start = File("ip.txt").readLines()[0]
 
 private fun query(query: String): List<String> {
     val url = URL(start + query)
