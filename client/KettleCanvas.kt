@@ -1,11 +1,16 @@
 import java.awt.*
+import java.awt.event.MouseEvent
+import java.awt.event.MouseListener
 import java.awt.font.FontRenderContext
 import java.awt.font.TextLayout
 import java.awt.geom.Rectangle2D
+import javax.swing.JFrame
 import javax.swing.JPanel
 
 var currentRoom: String = ""
 const val GLASS = 200
+
+fun extended(r: IntRange) = r.first - 1..r.last + 1
 
 private fun <V> Iterable<V>.rangeOf(selector: (V) -> Int) = minOf(selector)..maxOf(selector)
 
@@ -15,19 +20,40 @@ private fun IntRange.split(parts: Int): List<Int> {
 }
 
 object KettleCanvas : JPanel() {
-    fun getSelectedKettle(): Kettle = Kettle(0, "", 0, 0)
+    //    private val mouseListener: MouseListener = object : MouseListener {
+//        override fun mouseClicked(e: MouseEvent) = e.run {
+//            if (!isInsideBoard(cellIndices(e.x, e.y))) return
+//            movePlayer(cellIndices(x to y))
+//        }
+//
+//        override fun mouseReleased(e: MouseEvent) {}
+//        override fun mousePressed(e: MouseEvent) {}
+//        override fun mouseExited(e: MouseEvent) {}
+//        override fun mouseEntered(e: MouseEvent) {}
+//    }
+    fun getSelectedKettle() = Kettle(0, "", 0, 0)
 
     private const val border = 20
     override fun paint(g: Graphics) {
         val currentTime = System.currentTimeMillis()
-        val optimums = nearKettles(currentRoom, GLASS, currentTime)
+        val optimums = listOf(
+            Kettle(1, "room1", currentTime - 30000, 1000) to 50,
+            Kettle(1, "room2", currentTime - 20000, 1000) to 60,
+            Kettle(1, "room2", currentTime - 15000, 1000) to 70
+        )
         if (optimums.isEmpty()) return
-        val distanceRange = optimums.rangeOf { (_, dist) -> dist }
-        val boilRange = optimums.rangeOf { (kettle, _) -> (kettle.boilTime - currentTime).toInt() / 1000 }
+        val distanceRange = extended(optimums.rangeOf { (_, dist) -> dist })
+        val boilRange = extended(optimums.rangeOf { (kettle, _) -> (currentTime - kettle.boilTime).toInt() / 1000 })
 
+        clear(g)
         drawAxes(g)
         val (xRange, yRange) = drawScale(g, distanceRange, boilRange)
         drawPoints(g, optimums, currentTime, distanceRange, boilRange)
+    }
+
+    private fun clear(g: Graphics) {
+        foreground = Color.WHITE
+        g.drawRect(0, 0, width, height)
     }
 
     private fun drawPoints(
@@ -38,7 +64,7 @@ object KettleCanvas : JPanel() {
         val res = mutableListOf<Pair<Kettle, Point>>()
         for ((kettle, dist) in optimums) {
             val x = getCoordinate(xRange, dist, width)
-            val boilTime = (kettle.boilTime - currentTime).toInt() / 1000
+            val boilTime = (currentTime - kettle.boilTime).toInt() / 1000
             val y = getCoordinate(yRange, yRange.first + yRange.last - boilTime, height)
             g.drawOval(x - 2, y - 2, 4, 4)
             res.add(kettle to Point(x, y))
