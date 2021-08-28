@@ -1,8 +1,8 @@
 # How to set up a server?
 #### A small intro
- * It will be a local server launched on current workstation
- * You should use Linux, but there are also similar command in Windows or mac
- * we will use apache2, php7.0+ and MySQL
+ * This will be a local server running on current workstation
+ * You should use Linux, but there are also similar commands in Windows or Mac OS
+ * We used apache2, php7.0+ and MySQL
    * install on Linux: 
        ```bash
        sudo apt update
@@ -18,9 +18,9 @@
     ![](ifconfig.png)
  3) Now, note that our computer has an ip-address of `192.168.43.217` in local network
  4) We will run the server on port #1000, so the final url is: `http://192.168.43.217:1000/`
- 5) Setting up HTTP server (following instructions works only on Linux):
+ 5) Setting up HTTP server (The following instructions only work on Linux):
     1. create a file `/etc/apache2/sites-available/hack.conf`
-    2. insert following code there:
+    2. paste the following code there:
     ```apacheconf
     Listen 1000
 
@@ -38,14 +38,14 @@
         </Directory>
     </VirtualHost>
     ```
-    3. Execute following commands:
+    3. run the following commands:
     ```bash
     sudo mkdir /var/www/hack
     sudo chmod 777 /var/www/hack
     sudo mkdir /var/www/hack/log 
     sudo chmod 777 /var/www/hack/log
     ```
-    4. Execute following commands:
+    4. execute the following commands:
     ```bash
     sudo systemctl stop apache2.service
     sudo systemctl start apache2.service
@@ -53,7 +53,7 @@
     sudo a2ensite hack
     sudo service apache2 restart 
     ```
-    5. Now we have working HTTP server `http://192.168.43.217:1000/` showing today's date if we view it in a browser
+    5. Now we have a working HTTP server `http://192.168.43.217:1000/` showing today's date if we view it in a browser.
  6) Setting up MySQL server (Linux):
     1. install MySQL if it does not exist
     ```bash
@@ -81,5 +81,5 @@
     
     EXIT;
     ```
-    5. so, we set up a MySQL server
-  7) Finally, `http://192.168.43.217:1000/` is fully ready for work
+    5. So, we have configured a MySQL server.
+  7) Finally, `http://192.168.43.217:1000/` is completely ready for work.
