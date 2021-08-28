@@ -45,12 +45,14 @@ object KettleCanvas : JPanel() {
         override fun mouseExited(e: MouseEvent) {}
         override fun mouseEntered(e: MouseEvent) {}
     }
-    init{
+
+    init {
         addMouseListener(mouseListener)
     }
+
     private const val border = 20
     override fun paint(g: Graphics) {
-        setSize(1400,900)
+        setSize(1400, 900)
         val currentTime = System.currentTimeMillis()
         val optimums = nearKettles(room, ml, currentTime)
         if (optimums.isEmpty()) return
@@ -89,8 +91,8 @@ object KettleCanvas : JPanel() {
     private fun drawScale(g: Graphics, xRange: IntRange, yRange: IntRange): Pair<List<Int>, List<Int>> {
         g.color = Color.BLACK
         val freq = 2
-        val xLabels = xRange.split(parts = (width - freq * border) / freq * border)
-        val yLabels = yRange.split(parts = (height - freq * border) / freq * border)
+        val xLabels = xRange.split(parts = (width - freq * border) / freq / border)
+        val yLabels = yRange.split(parts = (height - freq * border) / freq / border)
         val longestText = (xLabels + yLabels).map { it.toString() }.maxByOrNull { it.length }!!
         g.font = optimalFont(g, longestText)
         for ((index, label) in xLabels.map { it.toString() }.withIndex()) {
