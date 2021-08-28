@@ -97,12 +97,12 @@ class TablePanel : JPanel(GridLayout(1,1)) {
 }
 
 private fun Long.asTime(): String = when {
-    this <= -120000 -> "${this / 60} minutes ago" //Negative time is OK here
+    this <= -120000 -> "${this / 60000} minutes ago" //Negative time is OK here
     this <= -60000 -> "-1 minute ago"
     this == -1000L || this == 1000L -> "$this second ago"
     this < 60000 -> "$this seconds ago"
     this < 120000 -> "1 minute ago"
-    this < 3600000 -> "${this / 60} minutes ago"
+    this < 3600000 -> "${this / 60000} minutes ago"
     this < 7200000 -> "1 hour ago"
     else -> "${this / 3600000} hour ago"
 }

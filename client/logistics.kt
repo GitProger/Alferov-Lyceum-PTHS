@@ -5,7 +5,7 @@ import kotlin.math.absoluteValue
 
 data class Kettle(val id: Int, val room: String, var boilTime: Long, var ml: Int)
 
-var room = ""
+var room = "1"
 var ml = 200
 
 private const val MILLIES_IN_DAY = 86_400_000
