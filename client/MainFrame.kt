@@ -10,6 +10,7 @@ object MainFrame : JFrame("Kettle map") {
     fun stub() = Unit
 
     init {
+        defaultCloseOperation = EXIT_ON_CLOSE
         layout = BorderLayout()
         add(KettleCanvas, BorderLayout.WEST)
 
