@@ -1,5 +1,6 @@
 import java.awt.BorderLayout
 import java.awt.FlowLayout
+import java.awt.GridLayout
 import java.lang.NumberFormatException
 import javax.swing.*
 import javax.swing.table.DefaultTableModel
@@ -32,26 +33,31 @@ class TableDialog : JDialog(MainFrame, "Other...", false) {
 fun boilAll(ids: List<Int>) {
     val kettles = updateAllKettles().associateBy { it.id }
     val curtime = System.currentTimeMillis()
-    MultiEnterDialog(
-        "Boil?",
-        ids.map { "How much water is in ${kettles[it]!!.room} kettle? (${kettles[it]!!.ml} ml boiled ${(curtime - kettles[it]!!.boilTime).asTime()})" }
-    ).processData {
+    for(id in ids) {
+        val water = JOptionPane.showInputDialog(
+            MainFrame,
+            "How much did you pour to ${kettles[id]!!.room} kettle? (${kettles[id]!!.ml} ml boiled ${(curtime - kettles[id]!!.boilTime).asTime()})? (In millilitres)", "Boil?", JOptionPane.QUESTION_MESSAGE
+        )
         try {
-            val volumes = it.map { it.toInt() }
-            if (volumes.any { it <= 0 }) "Volume is expected to be positive! (Did you invent negative-mass water?)"
-            else {
-                for (i in ids.indices) {
-                    boilKettle(ids[i], volumes[i])
-                }
-                null
+            val intVolume = water.toInt()
+
+            if (intVolume <= 0) {
+                JOptionPane.showInternalMessageDialog(
+                    MainFrame, "Volume is expected to be positive! (Did you drink more than was?)"
+                )
+            } else {
+                boilKettle(id, intVolume)
             }
         } catch (e: NumberFormatException) {
-            "Volume is expected to be integer! (Sure you can measure so accurately?)"
+            JOptionPane.showInternalMessageDialog(
+                MainFrame, "Volume is expected to be integer (No one can measure so accurately)"
+            )
         }
     }
+    KettleCanvas.repaint()
 }
 
-class TablePanel : JPanel(FlowLayout()) {
+class TablePanel : JPanel(GridLayout(1,1)) {
     // Название столбцов
     private val columns = arrayOf("", "Room", "Boil time", "Water")
 

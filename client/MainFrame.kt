@@ -1,4 +1,5 @@
 import java.awt.BorderLayout
+import java.awt.Dimension
 import java.awt.FlowLayout
 import java.awt.GridLayout
 import javax.swing.JFrame
@@ -6,7 +7,7 @@ import javax.swing.JPanel
 
 fun main() = MainFrame.stub()
 
-fun wrapped(panel:JPanel) = JPanel(BorderLayout()).apply { add(panel, BorderLayout.CENTER) }
+fun wrapped(panel: JPanel) = JPanel(BorderLayout()).apply { add(panel, BorderLayout.CENTER) }
 
 object MainFrame : JFrame("Kettle map") {
     fun stub() = Unit
@@ -22,6 +23,13 @@ object MainFrame : JFrame("Kettle map") {
         add(input, BorderLayout.EAST)
         pack()
         setSize(800, 800)
+
+        val (iw, ih) = input.size
+        KettleCanvas.setSize(this.width - iw, ih)
+
         isVisible = true
     }
 }
+
+private operator fun Dimension.component1(): Int = width
+private operator fun Dimension.component2(): Int = height
