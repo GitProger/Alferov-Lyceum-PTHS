@@ -54,7 +54,7 @@ fun boilAll(ids: List<Int>) {
             )
         }
     }
-    KettleCanvas.repaint()
+    MainFrame.repaint()
 }
 
 class TablePanel : JPanel(GridLayout(1,1)) {
