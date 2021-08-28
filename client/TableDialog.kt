@@ -58,10 +58,7 @@ fun boilAll(ids: List<Int>) {
 }
 
 class TablePanel : JPanel(GridLayout(1,1)) {
-    // Название столбцов
     private val columns = arrayOf("", "Room", "Boil time", "Water")
-
-    // Данные для таблицы
 
     private val data: Array<Array<Any>>
     private val ids: List<Int>
