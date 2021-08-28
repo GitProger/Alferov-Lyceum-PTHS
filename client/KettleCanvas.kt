@@ -87,7 +87,7 @@ object KettleCanvas : JPanel() {
     private fun romanFont(size: Int) = Font("Times New Roman", Font.PLAIN, size)
 
     private fun drawScale(g: Graphics, xRange: IntRange, yRange: IntRange): Pair<List<Int>, List<Int>> {
-        g.color = Color.ORANGE
+        g.color = Color.BLACK
         val freq = 2
         val xLabels = xRange.split(parts = (width - freq * border) / freq * border)
         val yLabels = yRange.split(parts = (height - freq * border) / freq * border)
