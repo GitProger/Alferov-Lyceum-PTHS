@@ -3,7 +3,6 @@ import java.awt.FlowLayout
 import java.awt.GridLayout
 import javax.swing.JFrame
 import javax.swing.JPanel
-import javax.swing.KeyStroke
 
 fun main() = MainFrame.stub()
 
