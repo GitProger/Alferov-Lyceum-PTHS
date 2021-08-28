@@ -1,19 +1,53 @@
 import java.awt.BorderLayout
 import java.awt.FlowLayout
-import java.util.*
+import java.lang.NumberFormatException
 import javax.swing.*
 import javax.swing.table.DefaultTableModel
 
 class TableDialog : JDialog(MainFrame, "Other...", false) {
     val table = TablePanel()
 
-    init{
+    init {
         layout = BorderLayout()
         add(table, BorderLayout.NORTH)
 
         val buttons = JPanel(FlowLayout())
-        buttons.addButton("Boil") {boil(table.getSelected())}
-        buttons.addButton("Remove") {}
+        buttons.addButton("Boil") {
+            boilAll(table.getSelected())
+            dispose()
+        }
+        buttons.addButton("Remove") {
+            table.getSelected().forEach { delete(it) }
+            dispose()
+        }
+        buttons.addButton("Cancel") {
+            dispose()
+        }
+        add(buttons, BorderLayout.SOUTH)
+        pack()
+        isVisible = true
+    }
+}
+
+fun boilAll(ids: List<Int>) {
+    val kettles = updateAllKettles().associateBy { it.id }
+    val curtime = System.currentTimeMillis()
+    MultiEnterDialog(
+        "Boil?",
+        ids.map { "How much water is in ${kettles[it]!!.room} kettle? (${kettles[it]!!.ml} ml boiled ${(curtime - kettles[it]!!.boilTime).asTime()})" }
+    ).processData {
+        try {
+            val volumes = it.map { it.toInt() }
+            if (volumes.any { it <= 0 }) "Volume is expected to be positive! (Did you invent negative-mass water?)"
+            else {
+                for (i in ids.indices) {
+                    boilKettle(ids[i], volumes[i])
+                }
+                null
+            }
+        } catch (e: NumberFormatException) {
+            "Volume is expected to be integer! (Sure you can measure so accurately?)"
+        }
     }
 }
 
@@ -32,7 +66,7 @@ class TablePanel : JPanel(FlowLayout()) {
         ids = allKettles.map { it.id }
         val curtime = System.currentTimeMillis()
         data = allKettles.map {
-            arrayOf<Any>(false, it.room, (it.boilTime - curtime).asTime(), "${it.ml} ml")
+            arrayOf<Any>(false, it.room, (curtime - it.boilTime).asTime(), "${it.ml} ml")
         }.toTypedArray()
 
         val model: DefaultTableModel = object : DefaultTableModel(data, columns) {
@@ -48,9 +82,9 @@ class TablePanel : JPanel(FlowLayout()) {
 
     fun getSelected(): List<Int> {
         val res = mutableListOf<Int>()
-        for((row, id) in ids.withIndex()){
-            val check = table.getValueAt(row,0) as Boolean
-            if(check) res.add(id)
+        for ((row, id) in ids.withIndex()) {
+            val check = table.getValueAt(row, 0) as Boolean
+            if (check) res.add(id)
         }
         return res
     }
