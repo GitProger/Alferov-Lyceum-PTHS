@@ -20,7 +20,7 @@ private fun ask() = query("ask.php").map { it.toKettle() }
 private fun update(id: Int, boilTime: Long, ml: Int) = query("boil.php?id=$id&boil_time=$boilTime&ml=$ml")
 fun add(room: String) = query("add.php?room=$room").first().toInt()
 fun delete(id: Int) = query("remove.php?id=$id")
-fun byId(id: Int) = query("bi_id.php?id=$id").first().toKettle()
+fun byId(id: Int) = query("by_id.php?id=$id").first().toKettle()
 
 var graph: TreeMap<String, TreeMap<String, Int>>? = null
 private fun getMap() {
