@@ -1,8 +1,11 @@
 import java.awt.*
+import java.awt.event.MouseEvent
+import java.awt.event.MouseListener
 import java.awt.font.FontRenderContext
 import java.awt.font.TextLayout
 import java.awt.geom.Rectangle2D
 import javax.swing.JPanel
+import kotlin.math.abs
 
 var currentRoom: String = ""
 const val GLASS = 200
@@ -19,20 +22,19 @@ private fun IntRange.split(parts: Int): List<Int> {
 }
 
 object KettleCanvas : JPanel() {
-    //    private val mouseListener: MouseListener = object : MouseListener {
-//        override fun mouseClicked(e: MouseEvent) = e.run {
-//            if (!isInsideBoard(cellIndices(e.x, e.y))) return
-//            movePlayer(cellIndices(x to y))
-//        }
-//
-//        override fun mouseReleased(e: MouseEvent) {}
-//        override fun mousePressed(e: MouseEvent) {}
-//        override fun mouseExited(e: MouseEvent) {}
-//        override fun mouseEntered(e: MouseEvent) {}
-//    }
+    var kettleList: List<Pair<Kettle, Point>> = listOf()
+    private var selectedKettle: Kettle? = null
+    fun getSelectedKettle() = selectedKettle
+    private val mouseListener: MouseListener = object : MouseListener {
+        override fun mouseClicked(e: MouseEvent) = e.run {
+            selectedKettle = kettleList.minByOrNull { (_, p) -> abs(e.x - p.x) + abs(e.y - p.y) }?.first
+        }
 
-    fun getSelectedKettle() = Kettle(0, "", 0, 0)
-
+        override fun mouseReleased(e: MouseEvent) {}
+        override fun mousePressed(e: MouseEvent) {}
+        override fun mouseExited(e: MouseEvent) {}
+        override fun mouseEntered(e: MouseEvent) {}
+    }
     private const val border = 20
     override fun paint(g: Graphics) {
         val currentTime = System.currentTimeMillis()
