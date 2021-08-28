@@ -6,6 +6,8 @@ import javax.swing.JPanel
 
 fun main() = MainFrame.stub()
 
+fun wrapped(panel:JPanel) = JPanel(BorderLayout()).apply { add(panel, BorderLayout.CENTER) }
+
 object MainFrame : JFrame("Kettle map") {
     fun stub() = Unit
 
@@ -15,12 +17,8 @@ object MainFrame : JFrame("Kettle map") {
         add(KettleCanvas, BorderLayout.WEST)
 
         val input = JPanel(GridLayout(2, 1))
-        val editWrapper = JPanel(FlowLayout())
-        editWrapper.add(UnwrappedEditPanel)
-        input.add(editWrapper)
-        val buttonWrapper = JPanel(FlowLayout())
-        buttonWrapper.add(UnwrappedButtonPanel)
-        input.add(buttonWrapper)
+        input.add(wrapped(UnwrappedEditPanel))
+        input.add(wrapped(UnwrappedButtonPanel))
         add(input, BorderLayout.EAST)
         pack()
         setSize(800, 800)
