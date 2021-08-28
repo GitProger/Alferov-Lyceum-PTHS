@@ -2,16 +2,28 @@ import java.awt.BorderLayout
 import java.awt.GridLayout
 import java.lang.NumberFormatException
 import javax.swing.*
+import javax.swing.event.DocumentEvent
+import javax.swing.event.DocumentListener
 import kotlin.system.exitProcess
 
-class EditPanel(question: String, default: String, actionOnEditing: (String) -> String) : JPanel(GridLayout(1,2)) {
+class EditPanel(question: String, default: String, actionOnEditing: (String) -> Unit) : JPanel(GridLayout(1, 2)) {
     init {
         add(JLabel(question), BorderLayout.WEST)
 
-        val messageLabel = JLabel()
-
         val field = JTextField(default)
-        field.addCaretListener { messageLabel.text = actionOnEditing(field.text) }
+        field.document.addDocumentListener(object : DocumentListener {
+            override fun insertUpdate(e: DocumentEvent?) {
+                actionOnEditing(field.text)
+            }
+
+            override fun removeUpdate(e: DocumentEvent?) {
+                actionOnEditing(field.text)
+            }
+
+            override fun changedUpdate(e: DocumentEvent?) {
+                actionOnEditing(field.text)
+            }
+        })
         add(field, BorderLayout.EAST)
     }
 }
@@ -21,19 +33,12 @@ object UnwrappedEditPanel : JPanel(GridLayout(2, 1)) {
 
         add(EditPanel("Where are you? (Your room)", "") {
             room = it
-            ""
         })
 
         add(EditPanel("How much tea do you want? (ml)", "200") {
             try {
-                val i = it.toInt()
-                if (i <= 0) "Volume is expected to be positive"
-                else {
-                    ml = i
-                    ""
-                }
+                ml = it.toInt()
             } catch (e: NumberFormatException) {
-                "Volume is expected to be integer"
             }
         })
 
