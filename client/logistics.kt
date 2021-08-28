@@ -80,6 +80,7 @@ fun nearKettles(currentRoom: String, ml: Int, currentTime: Long): List<Pair<Kett
 }
 
 fun boilKettle(id: Int, volume: Int) {
-    update(id, System.currentTimeMillis() + 90000L, volume)
+    val boilingTime = (180L * 1000L * volume) / 1000L
+    update(id, System.currentTimeMillis() + boilingTime, volume)
 }
 fun drink(id: Int, volumeRemaining: Int) = update(id, byId(id).boilTime, volumeRemaining)
