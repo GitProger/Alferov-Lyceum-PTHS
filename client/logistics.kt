@@ -39,7 +39,7 @@ fun String.toKettle(): Kettle {
 
 fun updateAllKettles() = ask()
 
-fun nearKettles(currentRoom: String, ml: Int): List<Pair<Kettle, Int>> {
+fun nearKettles(currentRoom: String, ml: Int, currentTime: Long): List<Pair<Kettle, Int>> {
     getMap()
     val distance = TreeMap<String, Int>() //distance from currentRoom, calculated using Dijkstra algorithm
     distance[currentRoom] = 0
@@ -58,7 +58,8 @@ fun nearKettles(currentRoom: String, ml: Int): List<Pair<Kettle, Int>> {
             }
         }
     }
-    val candidates = ask().filter { it.ml >= ml }.sortedByDescending { it.boilTime }
+    val candidates = ask().filter { it.ml >= ml }
+        .sortedWith(compareByDescending<Kettle> { it.boilTime.coerceAtMost(currentTime) }.thenBy { distance[it.room]!! })
     var currentBestDistance = Int.MAX_VALUE
     val optimums = mutableListOf<Pair<Kettle, Int>>()
     for (kettle in candidates) {
